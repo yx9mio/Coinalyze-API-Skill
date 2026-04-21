@@ -5,7 +5,7 @@ description: JavaScript skill for Coinalyze API to fetch crypto futures market d
 
 # Coinalyze JS Skill
 
-This skill provides access to Coinalyze's cryptocurrency futures market data through JavaScript/Node.js scripts. It supports market discovery, current metrics, historical metrics, multi-metric queries, batch fetching, local caching, and CSV export.
+This skill provides access to Coinalyze cryptocurrency futures market data through JavaScript/Node.js scripts. It supports market discovery, current metrics, historical metrics, multi-metric queries, batch fetching, local caching, and CSV export.
 
 ## Key Capabilities
 
@@ -27,7 +27,7 @@ This skill provides access to Coinalyze's cryptocurrency futures market data thr
 
 The Coinalyze API requires an `api_key`. This skill reads the key from the environment variable `COINALYZE_API_KEY`. [web:2]
 
-### Environment setup
+### Environment Setup
 
 Linux/macOS:
 
@@ -41,8 +41,6 @@ Or use a `.env` file:
 COINALYZE_API_KEY=your_api_key_here
 ```
 
-The project can load `.env` automatically with `dotenv`.
-
 ## Project Structure
 
 ```text
@@ -52,6 +50,10 @@ coinalyze-js-skill/
 ├── README.md
 ├── package.json
 ├── symbols.txt
+├── test.js
+├── .github/
+│   └── workflows/
+│       └── node-ci.yml
 └── scripts/
     ├── cache.js
     ├── coinalyze-client.js
@@ -82,265 +84,104 @@ cp .env.example .env
 
 Use this first to find valid symbols and exchanges.
 
-- List futures markets:
-  ```bash
-  node scripts/get-markets.js --type future
-  ```
-
-- List spot markets:
-  ```bash
-  node scripts/get-markets.js --type spot
-  ```
-
-- List exchanges:
-  ```bash
-  node scripts/get-markets.js --type exchange
-  ```
+```bash
+node scripts/get-markets.js --type future
+node scripts/get-markets.js --type spot
+node scripts/get-markets.js --type exchange
+```
 
 ### 2. Current Metrics
 
-Use this to get real-time snapshots for one or more symbols.
+Use this for real-time snapshots.
 
-- Open Interest:
-  ```bash
-  node scripts/get-current-data.js --type oi --symbols BTCUSDT_PERP.A
-  ```
-
-- Funding Rate:
-  ```bash
-  node scripts/get-current-data.js --type funding --symbols BTCUSDT_PERP.A
-  ```
-
-- Predicted Funding Rate:
-  ```bash
-  node scripts/get-current-data.js --type predicted_funding --symbols BTCUSDT_PERP.A
-  ```
+```bash
+node scripts/get-current-data.js --type oi --symbols BTCUSDT_PERP.A
+node scripts/get-current-data.js --type funding --symbols BTCUSDT_PERP.A
+node scripts/get-current-data.js --type predicted_funding --symbols BTCUSDT_PERP.A
+```
 
 ### 3. Historical Metrics
 
 Use this for time-series analysis.
 
-- Liquidation history:
-  ```bash
-  node scripts/get-history.js --type liquidation --symbols BTCUSDT_PERP.A --interval daily --from 7d
-  ```
-
-- Funding history:
-  ```bash
-  node scripts/get-history.js --type funding --symbols BTCUSDT_PERP.A --interval 1hour --from 3d
-  ```
-
-- OHLCV history:
-  ```bash
-  node scripts/get-history.js --type ohlcv --symbols BTCUSDT_PERP.A --interval 4hour --from 14d
-  ```
+```bash
+node scripts/get-history.js --type liquidation --symbols BTCUSDT_PERP.A --interval daily --from 7d
+node scripts/get-history.js --type funding --symbols BTCUSDT_PERP.A --interval 1hour --from 3d
+node scripts/get-history.js --type ohlcv --symbols BTCUSDT_PERP.A --interval 4hour --from 14d
+```
 
 ## Command Examples
 
 ### Market discovery examples
 
-Get futures market list:
-
 ```bash
 node scripts/get-markets.js --type future
-```
-
-Get spot market list:
-
-```bash
-node scripts/get-markets.js --type spot
-```
-
-Get exchanges:
-
-```bash
-node scripts/get-markets.js --type exchange
-```
-
-Save futures markets to CSV:
-
-```bash
 node scripts/get-markets.js --type future --csv output/futures.csv
 ```
 
 ### Current metric examples
 
-Get OI for one symbol:
-
 ```bash
 node scripts/get-current-data.js --type oi --symbols BTCUSDT_PERP.A
-```
-
-Get OI for multiple symbols:
-
-```bash
 node scripts/get-current-data.js --type oi --symbols BTCUSDT_PERP.A,ETHUSDT_PERP.A,SOLUSDT_PERP.A
-```
-
-Get funding rate:
-
-```bash
-node scripts/get-current-data.js --type funding --symbols BTCUSDT_PERP.A
-```
-
-Get predicted funding:
-
-```bash
-node scripts/get-current-data.js --type predicted_funding --symbols BTCUSDT_PERP.A
-```
-
-Convert values to USD when supported:
-
-```bash
-node scripts/get-current-data.js --type oi --symbols BTCUSDT_PERP.A --convert_to_usd true
-```
-
-Export current metric to CSV:
-
-```bash
 node scripts/get-current-data.js --type funding --symbols BTCUSDT_PERP.A --csv output/current-funding.csv
+node scripts/get-current-data.js --type oi --symbols BTCUSDT_PERP.A --convert_to_usd true
 ```
 
 ### Historical metric examples
 
-Get liquidation history for 7 days:
-
 ```bash
 node scripts/get-history.js --type liquidation --symbols BTCUSDT_PERP.A --interval daily --from 7d
-```
-
-Get hourly funding history for 3 days:
-
-```bash
 node scripts/get-history.js --type funding --symbols BTCUSDT_PERP.A --interval 1hour --from 3d
-```
-
-Get OHLCV history for 14 days:
-
-```bash
-node scripts/get-history.js --type ohlcv --symbols BTCUSDT_PERP.A --interval 4hour --from 14d
-```
-
-Get long/short ratio history:
-
-```bash
 node scripts/get-history.js --type long_short_ratio --symbols BTCUSDT_PERP.A --interval daily --from 30d
-```
-
-Get OI history between two dates:
-
-```bash
 node scripts/get-history.js --type oi --symbols BTCUSDT_PERP.A --interval daily --from 2026-04-01 --to 2026-04-21
-```
-
-Export historical data to CSV:
-
-```bash
 node scripts/get-history.js --type liquidation --symbols BTCUSDT_PERP.A --interval daily --from 30d --csv output/liquidation-history.csv
 ```
 
 ### Multi-metric examples
 
-Get several current indicators in one command:
-
 ```bash
 node scripts/get-indicators.js --mode current --metrics oi,funding,predicted_funding --symbols BTCUSDT_PERP.A
-```
-
-Get several history indicators for one symbol:
-
-```bash
 node scripts/get-indicators.js --mode history --metrics oi,liquidation,long_short_ratio --symbols BTCUSDT_PERP.A --interval daily --from 7d
-```
-
-Get several history indicators for multiple symbols:
-
-```bash
 node scripts/get-indicators.js --mode history --metrics oi,funding --symbols BTCUSDT_PERP.A,ETHUSDT_PERP.A --interval 1hour --from 3d
-```
-
-Export combined indicators to CSV:
-
-```bash
 node scripts/get-indicators.js --mode history --metrics oi,liquidation --symbols BTCUSDT_PERP.A --interval daily --from 7d --csv output/combined-indicators.csv
 ```
 
 ### Batch examples
 
-Run batch current metrics from a symbols file:
-
 ```bash
 node scripts/get-batch-indicators.js --mode current --metrics oi,funding --symbols-file symbols.txt
-```
-
-Run batch historical metrics from a symbols file:
-
-```bash
 node scripts/get-batch-indicators.js --mode history --metrics oi,liquidation,long_short_ratio --symbols-file symbols.txt --interval daily --from 7d
-```
-
-Run batch history with cache TTL:
-
-```bash
 node scripts/get-batch-indicators.js --mode history --metrics oi,liquidation --symbols-file symbols.txt --interval daily --from 7d --ttl 300
-```
-
-Export batch results to CSV:
-
-```bash
 node scripts/get-batch-indicators.js --mode history --metrics oi,liquidation --symbols-file symbols.txt --interval daily --from 7d --csv output/batch-history.csv
 ```
 
 ### Help examples
 
-Show help for market commands:
-
 ```bash
 node scripts/get-markets.js --help
-```
-
-Show help for current metrics:
-
-```bash
 node scripts/get-current-data.js --help
-```
-
-Show help for historical metrics:
-
-```bash
 node scripts/get-history.js --help
-```
-
-Show help for combined indicators:
-
-```bash
 node scripts/get-indicators.js --help
-```
-
-Show help for batch mode:
-
-```bash
 node scripts/get-batch-indicators.js --help
 ```
 
 ## Supported Parameters
 
-### Common arguments
-
 - `--symbols`: Comma-separated list of symbols
 - `--symbols-file`: File containing symbols separated by newline or comma
 - `--type`: Metric type for single-metric scripts
-- `--mode`: `current` or `history` for multi-metric scripts
-- `--metrics`: Comma-separated list of metric names
+- `--mode`: `current` or `history`
+- `--metrics`: Comma-separated metric names
 - `--interval`: Historical timeframe
-- `--from`: Start time, accepts UNIX timestamp, ISO date, or shorthand such as `7d`, `12h`, `30m`
-- `--to`: End time, same format as `--from`
+- `--from`: UNIX timestamp, ISO date, or shorthand like `7d`, `12h`, `30m`
+- `--to`: End time in the same format as `--from`
 - `--convert_to_usd`: `true` or `false`
 - `--csv`: Output CSV file path
 - `--ttl`: Cache TTL in seconds for batch mode
 - `--help`: Show usage information
 
-### Supported intervals
+## Supported Intervals
 
 - `1min`
 - `5min`
@@ -353,7 +194,9 @@ node scripts/get-batch-indicators.js --help
 - `12hour`
 - `daily`
 
-### Supported metric names
+The Coinalyze docs list these interval values for historical endpoints. [web:2]
+
+## Supported Metrics
 
 Current mode:
 - `oi`
@@ -391,13 +234,12 @@ npm run help:current
 npm run help:history
 npm run help:indicators
 npm run help:batch
+npm test
 ```
 
 ## Output Format
 
 All scripts print JSON to stdout. This makes them easy to redirect into files, pipe into `jq`, parse in automation, or export into CSV for further analysis.
-
-Example:
 
 ```bash
 node scripts/get-current-data.js --type oi --symbols BTCUSDT_PERP.A > output/oi.json
@@ -406,24 +248,23 @@ node scripts/get-current-data.js --type oi --symbols BTCUSDT_PERP.A > output/oi.
 ## Best Practices
 
 - **Resolve symbols first**: Call market discovery before requesting metrics.
-- **Use valid symbol format**: Example: `BTCUSDT_PERP.A`.
+- **Use valid symbol format**: Example: `BTCUSDT_PERP.A`. [file:1]
 - **Respect rate limits**: The API is limited to 40 calls per minute per API key. [web:2]
-- **Handle 429 correctly**: The API returns HTTP 429 and includes `Retry-After` when rate limit is exceeded. [web:2]
+- **Handle 429 correctly**: The API returns HTTP 429 and includes `Retry-After`. [web:2]
 - **Use batch mode for large symbol sets**: Current and history requests support up to 20 symbols per request. [web:2]
 - **Use cache for repeated scans**: This reduces repeated requests during screening workflows.
-- **Use CSV export for downstream analysis**: Useful for spreadsheets, dashboards, or data pipelines.
+- **Use CSV export for downstream analysis**: Useful for spreadsheets, dashboards, or pipelines.
 
 ## Rate Limits and Constraints
 
-- Authentication uses the `api_key` header or query parameter. [web:2]
+- Authentication uses `api_key` in header or query parameter. [web:2]
 - The API is limited to 40 calls per minute per API key. [web:2]
 - When the limit is exceeded, the API returns HTTP 429 and includes a `Retry-After` header. [web:2]
-- Current and historical symbol queries support up to 20 symbols per request. [web:2]
-- Historical endpoints use interval values such as `1min`, `5min`, `15min`, `30min`, `1hour`, `2hour`, `4hour`, `6hour`, `12hour`, and `daily`. [web:2]
+- Historical data are returned in ascending order. [web:2]
+- Intraday historical data retain only about 1500 to 2000 datapoints, while daily data keep older history. [web:2]
+- Current and historical symbol queries support up to 20 symbols per request, and each symbol still consumes one API call. [web:2]
 
 ## Error Handling
-
-The scripts validate common errors before sending requests where possible.
 
 Typical failures:
 - Missing `COINALYZE_API_KEY`
@@ -444,4 +285,4 @@ Typical failures:
 
 ## Notes
 
-This skill is designed for crypto futures market analysis and screening workflows. It is best suited for monitoring leverage, funding pressure, liquidation events, and long/short positioning across exchanges.
+This skill is best suited for crypto futures monitoring, leverage analysis, funding pressure checks, liquidation tracking, and long/short positioning analysis across supported exchanges.
