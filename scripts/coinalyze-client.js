@@ -152,6 +152,15 @@ function writeCsv(filePath, rows) {
   fs.writeFileSync(filePath, `${lines.join('\n')}\n`);
 }
 
+function chunkSymbols(symbols, size = 20) {
+  const list = Array.isArray(symbols) ? symbols : String(symbols).split(',').map((x) => x.trim()).filter(Boolean);
+  const chunks = [];
+  for (let i = 0; i < list.length; i += size) {
+    chunks.push(list.slice(i, i + size));
+  }
+  return chunks;
+}
+
 module.exports = {
   parseArgs,
   request,
@@ -160,6 +169,7 @@ module.exports = {
   showHelpAndExit,
   validateInterval,
   ensureMaxSymbols,
+  chunkSymbols,
   writeCsv,
   VALID_INTERVALS,
 };
