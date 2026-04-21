@@ -45,7 +45,7 @@ Options:
       symbols: symbols.join(','),
       interval: args.interval,
       from: toUnixSeconds(args.from),
-      to: toUnixSeconds(args.to),
+      to: toUnixSeconds(args.to) || Math.floor(Date.now() / 1000),
       convert_to_usd: args.convert_to_usd || 'false',
     };
 

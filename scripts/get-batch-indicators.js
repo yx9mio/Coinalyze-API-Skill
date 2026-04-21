@@ -84,7 +84,7 @@ async function main() {
         validateInterval(interval);
         params.interval = interval;
         params.from = toUnixSeconds(from);
-        if (to) params.to = toUnixSeconds(to);
+        params.to = toUnixSeconds(to) || Math.floor(Date.now() / 1000);
 
         if (metric === 'oi') pathname = '/open-interest-history';
         else if (metric === 'funding') pathname = '/funding-rate-history';
