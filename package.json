@@ -1,0 +1,41 @@
+{
+  "name": "coinalyze-js-skill",
+  "version": "1.2.0",
+  "private": true,
+  "description": "JavaScript skill for Coinalyze API market discovery, current metrics, and historical futures data.",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
+  "scripts": {
+    "markets:future": "node scripts/get-markets.js --type future",
+    "markets:spot": "node scripts/get-markets.js --type spot",
+    "markets:exchange": "node scripts/get-markets.js --type exchange",
+    "current:oi": "node scripts/get-current-data.js --type oi --symbols BTCUSDT_PERP.A",
+    "current:funding": "node scripts/get-current-data.js --type funding --symbols BTCUSDT_PERP.A",
+    "current:predicted-funding": "node scripts/get-current-data.js --type predicted_funding --symbols BTCUSDT_PERP.A",
+    "history:oi": "node scripts/get-history.js --type oi --symbols BTCUSDT_PERP.A --interval daily --from 7d",
+    "history:funding": "node scripts/get-history.js --type funding --symbols BTCUSDT_PERP.A --interval daily --from 7d",
+    "history:liquidation": "node scripts/get-history.js --type liquidation --symbols BTCUSDT_PERP.A --interval daily --from 7d",
+    "history:ohlcv": "node scripts/get-history.js --type ohlcv --symbols BTCUSDT_PERP.A --interval daily --from 7d",
+    "history:long-short": "node scripts/get-history.js --type long_short_ratio --symbols BTCUSDT_PERP.A --interval daily --from 7d",
+    "indicators:current": "node scripts/get-indicators.js --mode current --metrics oi,funding --symbols BTCUSDT_PERP.A",
+    "indicators:history": "node scripts/get-indicators.js --mode history --metrics oi,liquidation --symbols BTCUSDT_PERP.A --interval daily --from 7d",
+    "help:markets": "node scripts/get-markets.js --help",
+    "help:current": "node scripts/get-current-data.js --help",
+    "help:history": "node scripts/get-history.js --help",
+    "help:indicators": "node scripts/get-indicators.js --help"
+  },
+  "keywords": [
+    "coinalyze",
+    "crypto",
+    "futures",
+    "open-interest",
+    "funding-rate",
+    "liquidations"
+  ],
+  "license": "UNLICENSED"
+}
